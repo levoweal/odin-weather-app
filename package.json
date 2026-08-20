@@ -13,5 +13,8 @@
     "dev": "webpack serve",
     "deploy-setup": "git branch gh-pages && git checkout gh-pages && git merge main --no-edit && git checkout main",
     "deploy": "git checkout gh-pages && git add dist -f && git commit -m 'Deployment commit' && git subtree push --prefix dist origin gh-pages && git checkout main"
+  },
+  "dependencies": {
+    "date-fns": "^4.4.0"
   }
 }

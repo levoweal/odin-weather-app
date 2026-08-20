@@ -1,22 +1,28 @@
 import "./styles.css";
 
+import {
+    getWeatherData,
+    elF
+} from './helper.js'
+
+import {
+    format
+} from 'date-fns';
+
 const content = document.querySelector('.content');
 
 (() => {
     //searchbar stuff
     const searchbar = document.querySelector('.searchbar');
 
-    const label = document.createElement('label');
-    label.textContent = 'city';
+    const label = elF('label', 'city', 'search-label');
     label.htmlFor = 'search';
 
-    const input = document.createElement('input');
+    const input = elF('input', '', 'search-input');
     input.id = 'search';
     input.type = 'text';
 
-    const button = document.createElement('button');
-    button.className = 'confirm';
-    button.textContent = 'search';
+    const button = elF('button', 'search', 'search-button');
 
     button.addEventListener('click', async () => {
         if (!input.value) {
@@ -28,6 +34,7 @@ const content = document.querySelector('.content');
         const data = await getWeatherData(input.value);
 
         updateMain(data);
+        updateExtra(data);
     })
 
     label.appendChild(input);
@@ -35,31 +42,27 @@ const content = document.querySelector('.content');
     searchbar.appendChild(button);
 })()
 
-async function getWeatherData(city) {
-    const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=MYZTXBP9J8NAAXBJL3YLMKH94&contentType=json`);
-    const data = await response.json();
-    console.log(data);
-    data.isActive = false;
-    return data;
-}
-
 function updateMain(data) {
     const main = document.querySelector('.main');
     main.textContent = '';
 
-    const current = document.createElement('div');
-    current.textContent = data.currentConditions.temp;
-    current.className = 'current-temperature';
+    main.appendChild(elF('div', data.currentConditions.datetime, 'current-time'));
+    main.appendChild(elF('div', data.currentConditions.temp, 'current-temperature'));
+    main.appendChild(elF('div', data.currentConditions.conditions, 'current-conditions'));
+    main.appendChild(elF('div', `Feels like ${data.currentConditions.feelslike}`, 'current-feels-like'));
+}
 
-    const conditions = document.createElement('div');
-    conditions.textContent = data.currentConditions.conditions;
-    conditions.className = 'current-conditions';
+function updateExtra(data) {
+    const extra = document.querySelector('.extra');
+    extra.textContent = '';
 
-    const feels = document.createElement('div');
-    feels.textContent = `Feels like ${data.currentConditions.feelslike}`;
-    feels.className = 'current-feels-like';
+    data.days.slice(1, 6).forEach(day => {
+        const con = elF('div', '', 'day-container');
 
-    main.appendChild(current);
-    main.appendChild(conditions);
-    main.appendChild(feels);
+        con.appendChild(elF('div', format(new Date(day.datetime), 'EEEE'), 'day-date'));
+        con.appendChild(elF('div', day.conditions, 'day-conditions'));
+        con.appendChild(elF('div', day.temp, 'day-average-temperature'));
+
+        extra.appendChild(con);
+    });
 }
