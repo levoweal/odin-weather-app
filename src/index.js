@@ -11,6 +11,8 @@ import {
 
 const content = document.querySelector('.content');
 
+let data;
+
 (() => {
     //searchbar stuff
     const searchbar = document.querySelector('.searchbar');
@@ -31,10 +33,11 @@ const content = document.querySelector('.content');
             return;
         };
 
-        const data = await getWeatherData(input.value);
+        data = await getWeatherData(input.value);
 
         updateMain(data);
-        updateExtra(data);
+        updateHours(data);
+        updateDays(data);
     })
 
     label.appendChild(input);
@@ -43,26 +46,42 @@ const content = document.querySelector('.content');
 })()
 
 function updateMain(data) {
-    const main = document.querySelector('.main');
-    main.textContent = '';
+    const container = document.querySelector('.main');
+    container.textContent = '';
 
-    main.appendChild(elF('div', data.currentConditions.datetime, 'current-time'));
-    main.appendChild(elF('div', data.currentConditions.temp, 'current-temperature'));
-    main.appendChild(elF('div', data.currentConditions.conditions, 'current-conditions'));
-    main.appendChild(elF('div', `Feels like ${data.currentConditions.feelslike}`, 'current-feels-like'));
+    container.appendChild(elF('div', data.currentConditions.datetime, 'current-time'));
+    container.appendChild(elF('div', data.currentConditions.temp, 'current-temperature'));
+    container.appendChild(elF('div', data.currentConditions.conditions, 'current-conditions'));
+    container.appendChild(elF('div', `Feels like ${data.currentConditions.feelslike}`, 'current-feels-like'));
 }
 
-function updateExtra(data) {
-    const extra = document.querySelector('.extra');
-    extra.textContent = '';
+function updateHours(data) {
+    const container = document.querySelector('.hours');
+    container.textContent = '';
 
-    data.days.slice(1, 6).forEach(day => {
+    for (const i of [0, 3, 7, 10, 14, 17, 21]) {
+        const con = elF('div', '', 'current-hour-container');
+        const hour = data.days[0].hours[i];
+
+        con.appendChild(elF('div', hour.datetime, 'current-hour-time'));
+        con.appendChild(elF('div', hour.temp, 'current-hour-temperature'));
+        con.appendChild(elF('div', hour.conditions, 'current-hour-conditions'));
+
+        container.appendChild(con);
+    }
+}
+
+function updateDays(data) {
+    const container = document.querySelector('.days');
+    container.textContent = '';
+
+    for (const day of data.days.slice(1, 8)) {
         const con = elF('div', '', 'day-container');
 
         con.appendChild(elF('div', format(new Date(day.datetime), 'EEEE'), 'day-date'));
         con.appendChild(elF('div', day.conditions, 'day-conditions'));
         con.appendChild(elF('div', day.temp, 'day-average-temperature'));
 
-        extra.appendChild(con);
-    });
+        container.appendChild(con);
+    }
 }
