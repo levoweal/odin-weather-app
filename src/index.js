@@ -2,19 +2,22 @@ import "./styles.css";
 
 import {
     getWeatherData,
-    elF
+    elF,
+    laF
 } from './helper.js'
 
 import {
     format
 } from 'date-fns';
 
-const content = document.querySelector('.content');
-
 let data;
+let state = {
+    celsius: true,
+    hour: '',
+    day: ''
+};
 
 (() => {
-    //searchbar stuff
     const searchbar = document.querySelector('.searchbar');
 
     const label = elF('label', 'city', 'search-label');
@@ -37,9 +40,39 @@ let data;
 
         const currentHour = data.days[0].hours.find(hour => hour.datetime.slice(0, 2) === data.currentConditions.datetime.slice(0, 2));
 
-        updateMain(currentHour);
-        updateHours(data.days[0]);
-        updateDays(data);
+        const utility = elF('div', '', 'utility');
+        const resetTime = elF('button', 'Show current time', 'reset-button');
+        resetTime.addEventListener('click', () => {
+            state.day = data.days[0];
+            state.hour = currentHour;
+            updateMain();
+        });
+
+        const unitSwitch = elF('fieldset', '', 'unit-switch-container');
+        const celLabel = laF('radio', 'Celsius', 'temp-unit');
+        celLabel.input.checked = true;
+        const fahLabel = laF('radio', 'Fahrenheit', 'temp-unit');
+        unitSwitch.appendChild(celLabel);
+        unitSwitch.appendChild(fahLabel);
+
+        [celLabel.input, fahLabel.input].forEach(input => {
+            input.addEventListener('change', () => {
+                state.celsius = celLabel.input.checked;
+                updateMain();
+                updateHours();
+                updateDays();
+            })
+        })
+
+        utility.appendChild(resetTime);
+        utility.appendChild(unitSwitch);
+        searchbar.appendChild(utility);
+
+        state.day = data.days[0];
+        state.hour = currentHour;
+        updateMain();
+        updateHours();
+        updateDays();
     })
 
     label.appendChild(input);
@@ -47,50 +80,55 @@ let data;
     searchbar.appendChild(button);
 })()
 
-function updateMain(hour) {
+function updateMain() {
     const container = document.querySelector('.main');
     container.textContent = '';
 
-    container.appendChild(elF('div', hour.datetime, 'current-time'));
-    container.appendChild(elF('div', hour.temp, 'current-temperature'));
-    container.appendChild(elF('div', hour.conditions, 'current-conditions'));
-    container.appendChild(elF('div', `Feels like ${hour.feelslike}`, 'current-feels-like'));
+    container.appendChild(elF('div', state.day.datetime, 'current-date'));
+    container.appendChild(elF('div', format(new Date(state.day.datetime), 'EEEE'), 'current-week-day'));
+    container.appendChild(elF('div', state.hour.datetime.slice(0, 5), 'current-time'));
+    container.appendChild(elF('div', state.celsius ? state.hour.temp : (state.hour.temp * 9/5) + 32, 'current-temperature'));
+    container.appendChild(elF('div', state.hour.conditions, 'current-conditions'));
+    container.appendChild(elF('div', `Feels like ${state.hour.feelslike}`, 'current-feels-like'));
 }
 
-function updateHours(day) {
+function updateHours() {
     const container = document.querySelector('.hours');
     container.textContent = '';
 
     for (const i of [0, 3, 7, 10, 14, 17, 21]) {
         const con = elF('div', '', 'current-hour-container');
-        const hour = day.hours[i];
+        const hour = state.day.hours[i];
 
-        con.appendChild(elF('div', hour.datetime, 'current-hour-time'));
-        con.appendChild(elF('div', hour.temp, 'current-hour-temperature'));
-        con.appendChild(elF('div', hour.conditions, 'current-hour-conditions'));
+        con.appendChild(elF('div', hour.datetime.slice(0, 5), 'hour-time'));
+        con.appendChild(elF('div', state.celsius ? hour.temp : (hour.temp * 9/5) + 32, 'hour-temperature'));
+        con.appendChild(elF('div', hour.conditions, 'hour-conditions'));
 
         con.addEventListener('click', () => {
-            updateMain(hour);
+            state.hour = hour;
+            updateMain();
         })
 
         container.appendChild(con);
     }
 }
 
-function updateDays(data) {
+function updateDays() {
     const container = document.querySelector('.days');
     container.textContent = '';
 
     for (const day of data.days.slice(0, 7)) {
         const con = elF('div', '', 'day-container');
 
-        con.appendChild(elF('div', format(new Date(day.datetime), 'EEEE'), 'day-date'));
+        con.appendChild(elF('div', format(new Date(day.datetime), 'EEEE'), 'day-week-day'));
         con.appendChild(elF('div', day.conditions, 'day-conditions'));
-        con.appendChild(elF('div', day.temp, 'day-average-temperature'));
+        con.appendChild(elF('div', state.celsius ? day.temp : (day.temp * 9/5) + 32, 'day-average-temperature'));
 
         con.addEventListener('click', () => {
-            updateMain(day.hours[12]);
-            updateHours(day);
+            state.day = day;
+            state.hour = day.hours[12];
+            updateMain();
+            updateHours();
         })
 
         container.appendChild(con);

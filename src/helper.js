@@ -13,7 +13,21 @@ function elF(type, text, className) {
     return element;
 }
 
+function laF(type, text, name) {
+    const label = elF('label', text, `${name}-label`);
+    label.htmlFor = `${text}-input`;
+    const input = elF('input', '', `${name}-input`);
+    input.id = `${text}-input`;
+    input.type = type;
+    input.name = name;
+    label.appendChild(input);
+    label.input = input;
+    return label;
+
+}
+
 export {
     getWeatherData,
-    elF
+    elF,
+    laF
 }
