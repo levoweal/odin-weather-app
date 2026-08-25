@@ -1,0 +1,194 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Header */
+.searchbar {
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.search-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-button,
+.reset-button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.utility {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.unit-switch-container {
+  border: none;
+  display: flex;
+  gap: 10px;
+}
+
+.temp-unit-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.temp-unit-input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.temp-unit-input:hover {
+  border-color: #333;
+}
+
+.temp-unit-input:checked {
+  border-color: #333;
+  background: radial-gradient(circle, #333 40%, transparent 40%);
+}
+
+
+/* Main section */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.current-date {
+  font-size: 14px;
+  color: #666;
+}
+
+.current-week-day {
+  font-size: 18px;
+  margin-top: 5px;
+  color: #333;
+}
+
+.current-temperature {
+  font-size: 72px;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.current-conditions {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.current-feels-like {
+  font-size: 14px;
+  color: #666;
+}
+
+.current-time {
+  font-size: 14px;
+  color: #999;
+  margin-top: 10px;
+}
+
+/* Hours and Days sections */
+.hours,
+.days {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 20px;
+  gap: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.hour-container,
+.day-container {
+  width: clamp(120px, 16vw, 180px);
+  height: clamp(100px, 15vw, 120px);
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.hour-container:hover,
+.day-container:hover {
+  background-color: #f5f5f5;
+  border-color: #999;
+}
+
+.hour-container.selected,
+.day-container.selected {
+  border-color: #333;
+  background-color: #e8e8e8;
+}
+
+.hour-time,
+.day-week-day {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.hour-temperature,
+.day-average-temperature {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.hour-conditions,
+.day-conditions {
+  font-size: 12px;
+  color: #666;
+}

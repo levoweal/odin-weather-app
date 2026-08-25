@@ -26,8 +26,14 @@ function laF(type, text, name) {
 
 }
 
+function ternaryUnit(temp, check) {
+    const num = Math.floor(check ? temp : (temp * 9/5) +32);
+    return check ? `${num}°C` : `${num}°F`
+}
+
 export {
     getWeatherData,
     elF,
-    laF
+    laF,
+    ternaryUnit
 }
