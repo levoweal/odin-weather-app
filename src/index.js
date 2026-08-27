@@ -18,6 +18,8 @@ let state = {
     day: ''
 };
 
+const content = document.querySelector('.content');
+
 (() => {
     const searchbar = document.querySelector('.searchbar');
 
@@ -37,7 +39,13 @@ let state = {
             return;
         };
 
+        const loading = elF('div', '', 'loading');
+        loading.appendChild(elF('p', 'loading', 'loading-text'));
+        content.appendChild(loading);
+
         data = await getWeatherData(input.value);
+
+        loading.remove();
 
         const currentHour = data.days[0].hours.find(hour => hour.datetime.slice(0, 2) === data.currentConditions.datetime.slice(0, 2));
 
@@ -93,6 +101,7 @@ function updateMain() {
     container.appendChild(elF('div', ternaryUnit(state.hour.temp, state.celsius), 'current-temperature'));
     container.appendChild(elF('div', state.hour.conditions, 'current-conditions'));
     container.appendChild(elF('div', `Feels like ${Math.floor(state.hour.feelslike)}`, 'current-feels-like'));
+    container.appendChild(elF('div', `Humidity: ${Math.floor(state.hour.humidity)}%`, 'current-humidity'));
 }
 
 function updateHours() {

@@ -101,14 +101,20 @@ body {
 }
 
 .current-date {
-  font-size: 14px;
-  color: #666;
+  font-size: 16px;
+  color: #555;
 }
 
 .current-week-day {
   font-size: 18px;
   margin-top: 5px;
+  color: #444;
+}
+
+.current-time {
+  font-size: 20px;
   color: #333;
+  margin-top: 5px;
 }
 
 .current-temperature {
@@ -120,18 +126,18 @@ body {
 .current-conditions {
   font-size: 20px;
   color: #333;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .current-feels-like {
-  font-size: 14px;
-  color: #666;
+  font-size: 18px;
+  color: #444;
+  margin-bottom: 5px;
 }
 
-.current-time {
-  font-size: 14px;
-  color: #999;
-  margin-top: 10px;
+.current-humidity {
+    font-size: 16px;
+    color: #555;
 }
 
 /* Hours and Days sections */
@@ -191,4 +197,32 @@ body {
 .day-conditions {
   font-size: 12px;
   color: #666;
+}
+
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-text {
+  font-size: 18px;
+  color: #333;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
 }
