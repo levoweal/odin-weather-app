@@ -42,13 +42,25 @@ const content = document.querySelector('.content');
         const loading = elF('div', '', 'loading');
         loading.appendChild(elF('p', 'loading', 'loading-text'));
         content.appendChild(loading);
-
-        data = await getWeatherData(input.value);
-
-        loading.remove();
+        try {
+            data = await getWeatherData(input.value);
+        } catch (error) {
+            console.log(error.message);
+            if (error.message.includes('Failed to fetch')) {
+                input.setCustomValidity('connection error');
+                input.reportValidity();
+            } else {
+                input.setCustomValidity('invalid city');
+                input.reportValidity();
+            }
+            return;
+        } finally {
+            loading.remove();
+        }
 
         const currentHour = data.days[0].hours.find(hour => hour.datetime.slice(0, 2) === data.currentConditions.datetime.slice(0, 2));
 
+        //current time reset
         const utility = elF('div', '', 'utility');
         const resetTime = elF('button', 'Show current time', 'reset-button');
         resetTime.addEventListener('click', () => {
@@ -59,6 +71,7 @@ const content = document.querySelector('.content');
             updateDays();
         });
 
+        //temperature unit switch
         const unitSwitch = elF('fieldset', '', 'unit-switch-container');
         const celLabel = laF('radio', 'Celsius', 'temp-unit');
         celLabel.input.checked = true;
@@ -75,6 +88,7 @@ const content = document.querySelector('.content');
             })
         })
 
+        utility.textContent = '';
         utility.appendChild(resetTime);
         utility.appendChild(unitSwitch);
         searchbar.appendChild(utility);
