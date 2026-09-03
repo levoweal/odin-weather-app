@@ -7,6 +7,10 @@ import {
     ternaryUnit
 } from './helper.js'
 
+import { 
+    weatherIcons 
+} from './icons.js';
+
 import {
     format
 } from 'date-fns';
@@ -50,7 +54,7 @@ const content = document.querySelector('.content');
                 input.setCustomValidity('connection error');
                 input.reportValidity();
             } else {
-                input.setCustomValidity('invalid city');
+                input.setCustomValidity('invalid request');
                 input.reportValidity();
             }
             return;
@@ -112,7 +116,12 @@ function updateMain() {
     container.appendChild(elF('div', state.day.datetime, 'current-date'));
     container.appendChild(elF('div', format(new Date(state.day.datetime), 'EEEE'), 'current-week-day'));
     container.appendChild(elF('div', state.hour.datetime.slice(0, 5), 'current-time'));
-    container.appendChild(elF('div', ternaryUnit(state.hour.temp, state.celsius), 'current-temperature'));
+
+    const bigTemp = elF('div', '', 'current-big-display');
+    bigTemp.appendChild(weatherIcons[state.hour.icon]());
+    bigTemp.appendChild(elF('span', ternaryUnit(state.hour.temp, state.celsius), 'current-temperature'));
+    container.appendChild(bigTemp);
+
     container.appendChild(elF('div', state.hour.conditions, 'current-conditions'));
     container.appendChild(elF('div', `Feels like ${Math.floor(state.hour.feelslike)}`, 'current-feels-like'));
     container.appendChild(elF('div', `Humidity: ${Math.floor(state.hour.humidity)}%`, 'current-humidity'));

@@ -1,11 +1,12 @@
 async function getWeatherData(city) {
-    const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=MYZTXBP9J8NAAXBJL3YLMKH94&contentType=json`);
+    const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&iconSet=icons1&key=MYZTXBP9J8NAAXBJL3YLMKH94&contentType=json`);
     const data = await response.json();
     console.log(data);
     data.isActive = false;
     return data;
 }
 
+//element factory
 function elF(type, text, className) {
     const element = document.createElement(type);
     element.textContent = text;
@@ -13,6 +14,7 @@ function elF(type, text, className) {
     return element;
 }
 
+//label factory (input factory, but it goes inside label)
 function laF(type, text, name) {
     const label = elF('label', text, `${name}-label`);
     label.htmlFor = `${text}-input`;
@@ -26,14 +28,27 @@ function laF(type, text, name) {
 
 }
 
+//dynamic C/F temp unit based on truthy check parameter
+//true = C | false = F
+//takes C as default
 function ternaryUnit(temp, check) {
     const num = Math.floor(check ? temp : (temp * 9/5) +32);
     return check ? `${num}°C` : `${num}°F`
+}
+
+function svgF(pathParam) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', pathParam);
+    svg.appendChild(path);
+    return svg;
 }
 
 export {
     getWeatherData,
     elF,
     laF,
-    ternaryUnit
+    ternaryUnit,
+    svgF,
 }
