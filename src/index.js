@@ -136,8 +136,14 @@ function updateHours() {
         const hour = state.day.hours[i];
 
         con.appendChild(elF('div', hour.datetime.slice(0, 5), 'hour-time'));
-        con.appendChild(elF('div', ternaryUnit(hour.temp, state.celsius), 'hour-temperature'));
+
+        const bigTemp = elF('div', '', 'hour-big-display');
+        bigTemp.appendChild(weatherIcons[hour.icon]());
+        bigTemp.appendChild(elF('div', ternaryUnit(hour.temp, state.celsius), 'hour-temperature'));
+        con.appendChild(bigTemp);
+
         con.appendChild(elF('div', hour.conditions, 'hour-conditions'));
+
         if (state.hour === hour) {
             con.classList.add('selected');
         };
@@ -160,7 +166,12 @@ function updateDays() {
         const con = elF('div', '', 'day-container');
 
         con.appendChild(elF('div', format(new Date(day.datetime), 'EEEE'), 'day-week-day'));
-        con.appendChild(elF('div', ternaryUnit(day.temp, state.celsius), 'day-average-temperature'));
+
+        const bigTemp = elF('div', '', 'day-big-display');
+        bigTemp.appendChild(weatherIcons[day.icon]());
+        bigTemp.appendChild(elF('div', ternaryUnit(day.temp, state.celsius), 'day-average-temperature'))
+        con.appendChild(bigTemp);
+        
         con.appendChild(elF('div', day.conditions, 'day-conditions'));
 
         if (state.day === day) {

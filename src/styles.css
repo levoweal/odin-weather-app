@@ -121,6 +121,8 @@ body {
   font-size: 72px;
   font-weight: bold;
   margin: 20px 0;
+  display: flex;
+  gap: 20px;
 }
 
 .current-conditions {
@@ -186,11 +188,18 @@ body {
   margin-bottom: 8px;
 }
 
-.hour-temperature,
-.day-average-temperature {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 8px;
+.hour-big-display,
+.day-big-display {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 5px;
+}
+
+.hour-big-display {
+    display: flex;
+    gap: 5px;
 }
 
 .hour-conditions,
