@@ -4,7 +4,8 @@ import {
     getWeatherData,
     elF,
     laF,
-    ternaryUnit
+    ternaryUnit,
+    upper
 } from './helper.js'
 
 import { 
@@ -22,20 +23,31 @@ let state = {
     day: ''
 };
 
-const content = document.querySelector('.content');
-
 (() => {
-    const searchbar = document.querySelector('.searchbar');
+    const content = document.querySelector('.content');
+    const header = document.querySelector('.header');
 
-    const label = elF('label', 'city', 'search-label');
+    const searchbar = elF('div', '', 'searchbar');
+    
+    const label = elF('label', 'Location:', 'search-label');
     label.htmlFor = 'search';
-
     const input = elF('input', '', 'search-input');
     input.id = 'search';
     input.type = 'text';
-
     const button = elF('button', 'search', 'search-button');
 
+    searchbar.appendChild(label);
+    searchbar.appendChild(input);
+    searchbar.appendChild(button);
+
+    const utility = elF('div', '', 'utility');
+    const address = elF('div', '', 'address');
+
+    header.appendChild(searchbar);
+    header.appendChild(address);
+    header.appendChild(utility);
+
+    //search button event
     button.addEventListener('click', async () => {
         if (!input.value) {
             input.setCustomValidity('type something first');
@@ -43,6 +55,7 @@ const content = document.querySelector('.content');
             return;
         };
 
+        //api request
         const loading = elF('div', '', 'loading');
         loading.appendChild(elF('p', 'loading', 'loading-text'));
         content.appendChild(loading);
@@ -64,8 +77,10 @@ const content = document.querySelector('.content');
 
         const currentHour = data.days[0].hours.find(hour => hour.datetime.slice(0, 2) === data.currentConditions.datetime.slice(0, 2));
 
-        //current time reset
-        const utility = elF('div', '', 'utility');
+        //resolved address
+        address.textContent = `Resolved address for: ${upper(data.resolvedAddress)}`;
+
+        //current time reset button
         const resetTime = elF('button', 'Show current time', 'reset-button');
         resetTime.addEventListener('click', () => {
             state.day = data.days[0];
@@ -95,7 +110,6 @@ const content = document.querySelector('.content');
         utility.textContent = '';
         utility.appendChild(resetTime);
         utility.appendChild(unitSwitch);
-        searchbar.appendChild(utility);
 
         state.day = data.days[0];
         state.hour = currentHour;
@@ -103,10 +117,6 @@ const content = document.querySelector('.content');
         updateHours();
         updateDays();
     })
-
-    label.appendChild(input);
-    searchbar.appendChild(label);
-    searchbar.appendChild(button);
 })()
 
 function updateMain() {
@@ -171,7 +181,7 @@ function updateDays() {
         bigTemp.appendChild(weatherIcons[day.icon]());
         bigTemp.appendChild(elF('div', ternaryUnit(day.temp, state.celsius), 'day-average-temperature'))
         con.appendChild(bigTemp);
-        
+
         con.appendChild(elF('div', day.conditions, 'day-conditions'));
 
         if (state.day === day) {
