@@ -2,6 +2,7 @@ import "./styles.css";
 
 import {
     getWeatherData,
+    getGifUrl,
     elF,
     laF,
     ternaryUnit,
@@ -17,13 +18,38 @@ import {
 } from 'date-fns';
 
 let data;
-let state = {
+const state = {
     celsius: true,
     hour: '',
     day: ''
 };
+/*
+const gifCache = JSON.parse(localStorage.getItem('gifCache')) || 
+{
+    snow: null,
+    rain: null,
+    fog: null,
+    wind: null,
+    cloudy: null,
+    'partly-cloudy-day': null,
+    'partly-cloudy-night': null,
+    'clear-day': null,
+    'clear-night': null
+};
+*/
 
-(() => {
+(async () => {
+    /*
+    if (gifCache.snow) {
+        await Promise.all(
+            Object.keys(gifCache).map(async key => {
+                gifCache[key] = await getGifUrl(`weather ${key}`);
+            })
+        )
+        localStorage.setItem('gifCache', JSON.stringify(gifCache));
+    }
+    */
+
     const content = document.querySelector('.content');
     const header = document.querySelector('.header');
 
@@ -122,6 +148,8 @@ let state = {
 function updateMain() {
     const container = document.querySelector('.main');
     container.textContent = '';
+    container.className = 'main';
+    container.classList.add(state.hour.icon);
 
     container.appendChild(elF('div', state.day.datetime, 'current-date'));
     container.appendChild(elF('div', format(new Date(state.day.datetime), 'EEEE'), 'current-week-day'));
@@ -135,6 +163,8 @@ function updateMain() {
     container.appendChild(elF('div', state.hour.conditions, 'current-conditions'));
     container.appendChild(elF('div', `Feels like ${Math.floor(state.hour.feelslike)}`, 'current-feels-like'));
     container.appendChild(elF('div', `Humidity: ${Math.floor(state.hour.humidity)}%`, 'current-humidity'));
+
+    // container.style.backgroundImage = `url('${gifCache[state.hour.icon]}')`;
 }
 
 function updateHours() {
@@ -144,6 +174,7 @@ function updateHours() {
     for (const i of [0, 3, 7, 10, 14, 17, 21]) {
         const con = elF('div', '', 'hour-container');
         const hour = state.day.hours[i];
+        con.classList.add(hour.icon);
 
         con.appendChild(elF('div', hour.datetime.slice(0, 5), 'hour-time'));
 
@@ -174,6 +205,7 @@ function updateDays() {
 
     for (const day of data.days.slice(0, 7)) {
         const con = elF('div', '', 'day-container');
+        con.classList.add(day.icon);
 
         con.appendChild(elF('div', format(new Date(day.datetime), 'EEEE'), 'day-week-day'));
 

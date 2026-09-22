@@ -5,6 +5,13 @@ async function getWeatherData(city) {
     return data;
 }
 
+//unused, left for future reference
+async function getGifUrl(search) {
+    const response = await fetch(`https://api.giphy.com/v1/gifs/translate?api_key=XIWaDS8vggVm2qmgAyAuVisoPuiAhI5d&s=${search}`);
+    const data = await response.json();
+    return data.data.images.original.url;
+}
+
 //element factory
 function elF(type, text, className) {
     const element = document.createElement(type);
@@ -52,6 +59,7 @@ function upper(string) {
 
 export {
     getWeatherData,
+    getGifUrl,
     elF,
     laF,
     ternaryUnit,
