@@ -118,7 +118,7 @@ const gifCache = JSON.parse(localStorage.getItem('gifCache')) ||
 
         //temperature unit switch
         const unitSwitch = elF('fieldset', '', 'unit-switch-container');
-        const celLabel = laF('radio', 'Celsius', 'temp-unit');
+        const celLabel = laF('radio', 'Celsiuss', 'temp-unit');
         celLabel.input.checked = true;
         const fahLabel = laF('radio', 'Fahrenheit', 'temp-unit');
         unitSwitch.appendChild(celLabel);
